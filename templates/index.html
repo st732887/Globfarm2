@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>FutureFarm</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body { background: #f3f4f7 }
+    .t-on { border-bottom:3px solid #159745; color:#18a14b }
+
+    #mp_query { transition:0.2s ease; }
+    #mp_query:hover { box-shadow:0 0 10px rgba(0,0,0,0.12); }
+    #mp_suggest div:hover { background:#f0f0f0; cursor:pointer; }
+  </style>
+</head>
+
+<body class="font-sans">
+
+  <!-- ✅ HEADER -->
+  <header class="bg-gray-900 text-white">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+      <h1 class="text-xl font-bold">🌾 FutureFarm</h1>
+      <nav class="flex gap-6 text-sm">
+        <button id="vx_tab_d" class="pb-1 t-on">FuturePrice</button>
+        <button id="vx_tab_a" class="pb-1">Analysis</button>
+        <button id="vx_tab_m" class="pb-1">Market</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-6">
+
+    <!-- ✅ Dashboard -->
+    <section id="vx_sec_d" class="bg-white rounded-xl shadow p-6">
+      <h2 class="text-2xl font-semibold mb-4">Predict</h2>
+
+      <button id="vx_btn_p"
+              class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg">
+        Predict Today’s Prices
+      </button>
+
+      <div id="vx_res" class="hidden mt-4 p-4 bg-gray-100 border rounded">
+        <p id="vx_min" class="text-green-700 font-semibold"></p>
+        <p id="vx_max" class="text-green-700 font-semibold"></p>
+      </div>
+
+      <div id="vx_plot_box" class="hidden mt-4">
+        <img id="vx_plot_img" class="block mx-auto rounded shadow-md">
+      </div>
+    </section>
+
+    <!-- ✅ Analysis -->
+    <section id="vx_sec_a" class="hidden bg-white rounded-xl shadow p-6 mt-6">
+      <h2 class="text-2xl font-semibold mb-4">Seed Quality Analysis (YOLO)</h2>
+
+      <input id="vx_up" type="file" accept="image/*"
+             class="border p-2 rounded-lg bg-gray-50 w-full">
+
+      <button id="vx_btn_s"
+              class="w-full mt-4 bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg">
+        Analyze Seed
+      </button>
+
+      <div id="vx_prev_box" class="hidden mt-4 text-center">
+        <img id="vx_prev_img" width="250" class="inline-block rounded shadow">
+      </div>
+
+      <div id="vx_seed_res" class="hidden mt-4 p-4 bg-gray-100 border rounded">
+        <p id="vx_seed_out" class="text-lg font-semibold text-gray-900"></p>
+      </div>
+    </section>
+
+    <!-- ✅ Market -->
+    <section id="vx_sec_m" class="hidden bg-white rounded-xl shadow p-6 mt-6">
+
+      <h2 class="text-2xl font-semibold mb-4">Mandi Live Market Prices</h2>
+
+      <!-- ✅ BEAUTIFUL SEARCH BAR WITH ICON BUTTON -->
+      <div class="relative my-3">
+        <input id="mp_query"
+               type="text"
+               placeholder="Search crop (Wheat, Rice, Tomato...)"
+               autocomplete="off"
+               class="w-full px-5 py-3 pl-12 pr-12 rounded-full bg-white shadow-lg border border-gray-200
+                      focus:ring-2 focus:ring-blue-500 outline-none text-gray-700">
+
+        <!-- Search Icon Button -->
+        <button id="mp_btn"
+                class="absolute right-4 top-3.5 text-gray-500 hover:text-gray-700">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+               viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+
+        <!-- Suggestions Dropdown -->
+        <div id="mp_suggest"
+             class="absolute z-20 w-full bg-white shadow-lg border rounded-xl mt-1 hidden"></div>
+      </div>
+
+      <!-- ✅ Quick Tags -->
+      <div class="flex gap-2 flex-wrap mb-3">
+        <button class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full mp_quick">Wheat</button>
+        <button class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full mp_quick">Rice</button>
+        <button class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full mp_quick">Tomato</button>
+        <button class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full mp_quick">Onion</button>
+        <button class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full mp_quick">Soyabean</button>
+      </div>
+
+      <!-- ✅ Results -->
+      <div id="mp_box" class="hidden mt-5 bg-gray-100 p-4 rounded-lg border overflow-x-auto">
+        <table class="w-full text-left">
+          <thead>
+            <tr class="bg-gray-300 text-sm">
+              <th class="p-2">State</th>
+              <th class="p-2">District</th>
+              <th class="p-2">Market</th>
+              <th class="p-2">Commodity</th>
+              <th class="p-2">Variety</th>
+              <th class="p-2">Min</th>
+              <th class="p-2">Max</th>
+              <th class="p-2">Modal</th>
+              <th class="p-2">Date</th>
+            </tr>
+          </thead>
+          <tbody id="mp_data"></tbody>
+        </table>
+      </div>
+
+    </section>
+
+  </main>
+
+<script>
+
+  /* ✅ TAB SWITCHING */
+  const tabD = document.getElementById("vx_tab_d");
+  const tabA = document.getElementById("vx_tab_a");
+  const tabM = document.getElementById("vx_tab_m");
+
+  const secD = document.getElementById("vx_sec_d");
+  const secA = document.getElementById("vx_sec_a");
+  const secM = document.getElementById("vx_sec_m");
+
+  const hideAll = () => {
+    secD.classList.add("hidden");
+    secA.classList.add("hidden");
+    secM.classList.add("hidden");
+    tabD.classList.remove("t-on");
+    tabA.classList.remove("t-on");
+    tabM.classList.remove("t-on");
+  };
+
+  tabD.onclick = () => { hideAll(); secD.classList.remove("hidden"); tabD.classList.add("t-on"); };
+  tabA.onclick = () => { hideAll(); secA.classList.remove("hidden"); tabA.classList.add("t-on"); };
+  tabM.onclick = () => { hideAll(); secM.classList.remove("hidden"); tabM.classList.add("t-on"); };
+
+  /* ✅ LSTM Predict */
+  const pb = document.getElementById("vx_btn_p"),
+        pMin = document.getElementById("vx_min"),
+        pMax = document.getElementById("vx_max"),
+        rBox = document.getElementById("vx_res"),
+        pImg = document.getElementById("vx_plot_img"),
+        pBox = document.getElementById("vx_plot_box");
+
+  pb.onclick = async () => {
+    const r = await fetch("/predict");
+    const j = await r.json();
+    pMin.textContent = "Predicted Min: ₹" + j.Predicted_Min;
+    pMax.textContent = "Predicted Max: ₹" + j.Predicted_Max;
+    rBox.classList.remove("hidden");
+
+    const g = await fetch("/plot");
+    pImg.src = URL.createObjectURL(await g.blob());
+    pBox.classList.remove("hidden");
+  };
+
+  /* ✅ YOLO Seed Analysis */
+  const up = document.getElementById("vx_up"),
+        sb = document.getElementById("vx_btn_s"),
+        pvBox = document.getElementById("vx_prev_box"),
+        pvImg = document.getElementById("vx_prev_img"),
+        sdBox = document.getElementById("vx_seed_res"),
+        sdOut = document.getElementById("vx_seed_out");
+
+  sb.onclick = async () => {
+    const f = up.files[0];
+    if (!f) return alert("Please upload an image.");
+
+    pvBox.classList.remove("hidden");
+    pvImg.src = URL.createObjectURL(f);
+
+    const form = new FormData();
+    form.append("image", f);
+
+    const r = await fetch("/predict_seed", { method:"POST", body:form });
+    const d = await r.json();
+
+    sdOut.textContent = `Class: ${d.class} (Confidence: ${(d.confidence * 100).toFixed(2)}%)`;
+    sdBox.classList.remove("hidden");
+  };
+
+  /* ✅ MARKET SEARCH & SUGGEST */
+  const mpQuery = document.getElementById("mp_query");
+  const mpSuggest = document.getElementById("mp_suggest");
+  const crops = ["Wheat","Rice","Tomato","Onion","Potato","Soyabean","Maize","Mustard","Barley","Sugarcane"];
+
+  mpQuery.oninput = () => {
+    const v = mpQuery.value.toLowerCase();
+    if (!v) return mpSuggest.classList.add("hidden");
+
+    const filtered = crops.filter(c => c.toLowerCase().startsWith(v));
+    mpSuggest.innerHTML = filtered.map(c => `<div class="px-4 py-2">${c}</div>`).join("");
+
+    mpSuggest.classList.remove("hidden");
+
+    mpSuggest.querySelectorAll("div").forEach(el => {
+      el.onclick = () => {
+        mpQuery.value = el.textContent;
+        mpSuggest.classList.add("hidden");
+      };
+    });
+  };
+
+  /* ✅ QUICK TAGS FILL INPUT */
+  document.querySelectorAll(".mp_quick").forEach(btn => {
+    btn.onclick = () => {
+      mpQuery.value = btn.textContent;
+    };
+  });
+
+  /* ✅ SEARCH BUTTON (ICON) */
+  const mpBtn = document.getElementById("mp_btn");
+  const mpBox = document.getElementById("mp_box");
+  const mpData = document.getElementById("mp_data");
+
+  mpBtn.onclick = async () => {
+    const q = mpQuery.value.trim();
+    if (!q) return alert("Enter crop name");
+
+    const r = await fetch("/search?q=" + q);
+    const data = await r.json();
+    mpData.innerHTML = "";
+
+    if (!data.length) {
+      mpData.innerHTML = `<tr><td colspan="9" class="text-center py-3 text-red-500">No data found</td></tr>`;
+      mpBox.classList.remove("hidden");
+      return;
+    }
+
+    data.forEach(row => {
+      mpData.innerHTML += `
+        <tr class="border-b">
+          <td class="p-2">${row.state}</td>
+          <td class="p-2">${row.district}</td>
+          <td class="p-2">${row.market}</td>
+          <td class="p-2">${row.commodity}</td>
+          <td class="p-2">${row.variety}</td>
+          <td class="p-2">${row.min}</td>
+          <td class="p-2">${row.max}</td>
+          <td class="p-2">${row.modal}</td>
+          <td class="p-2">${row.date}</td>
+        </tr>`;
+    });
+
+    mpBox.classList.remove("hidden");
+  };
+
+</script>
+
+</body>
+</html>
